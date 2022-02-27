@@ -32,4 +32,4 @@ http://localhost:3000/customer-service/
 ### Backend Swagger API
 http://localhost:8080/customer-service/swagger-ui.html#/
 
-![Test Image 1](https://github.com/nwayesha/customer-service-repo/blob/master/doc/swagger_api.png)
+![Test Image 1](https://github.com/nwayesha/customer-service-repo/tree/main/docs/swagger_api.png)
