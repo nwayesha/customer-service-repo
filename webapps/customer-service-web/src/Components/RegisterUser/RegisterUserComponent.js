@@ -198,11 +198,15 @@ class RegisterUserComponent extends Component {
                         </Card.Body>
                     </Card>
          </Row>
-         <Row>
-
-         <CustomerDataList
-            customerId={this.state.customerId}        
-         />   
+         <Row className="justify-content-md-center">
+              <Card border="primary">
+                        <Card.Header as="h5">User saved Data</Card.Header>
+                        <Card.Body>
+                  <CustomerDataList
+                   customerId={this.state.customerId}        
+                  />    
+         </Card.Body>
+         </Card>
          </Row>
          </div>
         );

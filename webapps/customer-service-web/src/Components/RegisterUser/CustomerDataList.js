@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { LoadCustomer } from '../../redux/actions/customer/LoadCustomerAction'
 
-
  //table details here
- const products = [
-    { id: 1, name: "Ordinarycoders course 1", price: 101 },
-    { id: 2, name: "Ordinarycoders course 2", price: 102 },
-    { id: 3, name: "Ordinarycoders course 3", price: 103 },
-    { id: 4, name: "Ordinarycoders course 4", price: 104 },
-    { id: 5, name: "Ordinarycoders course 5", price: 105 }
+ const customerList = [
+    { id: 1, name: "Ayesha", address:"Upplands Vasby", telephone: 111111, email: "nwayesha@gmail.com" },
+    { id: 2, name: "Thusitha",address:"Upplands Vasby",telephone: 222222,email: "thusitha@gmail.com" },
+    { id: 3, name: "Sandeli",address:"Upplands Vasby", telephone: 333333,email: "sandeli@gmail.com" },
+    { id: 4, name: "Shaneli",address:"Upplands Vasby", telephone: 444444, email: "shaneli@gmail.com" },
+    { id: 5, name: "Amindu",address:"Upplands Vasby", telephone: 555555, email: "amindu@gmail.com" }
   ];
+
   const columns = [
     {
       dataField: "id",
@@ -45,6 +45,7 @@ import { LoadCustomer } from '../../redux/actions/customer/LoadCustomerAction'
             date: new Date(),
             customerId :this.props.customerId,
             customerList: []
+
         };
        
        
@@ -57,15 +58,19 @@ import { LoadCustomer } from '../../redux/actions/customer/LoadCustomerAction'
     }
 
     componentWillReceiveProps(nextProps) {
-      alert("componentWillReceiveProps")
-      if (nextProps.customerList != null && nextProps.customerList.customerList.length > 0) {
-        //this.customCountryList(nextProps.countryList.countryList);
-
-        alert("aaaaaaaaaaaaaaaaaaa");
+      //alert("componentWillReceiveProps")
+      if (nextProps.customerList != null && nextProps.customerList.customerList.length > 0) {        
+        this.customCustomerList(nextProps.customerList.customerList);
       }
       
     }
 
+    customCustomerList(customerList) {     
+      this.setState({
+        customerList: customerList
+      })
+    }
+   
     loadCustomerList = () => {
       this.props.loadCustomerList();
     }
@@ -74,7 +79,11 @@ import { LoadCustomer } from '../../redux/actions/customer/LoadCustomerAction'
     render() {
       return (
         <div>
-          <BootstrapTable keyField='id' data={ products } columns={ columns } />
+          <BootstrapTable 
+          keyField='id' 
+          data={ customerList } 
+          columns={ columns } 
+          />
         </div>
     
       )

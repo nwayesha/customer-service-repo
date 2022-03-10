@@ -18,8 +18,8 @@ class RegisterUser extends Component {
   }
   componentDidMount() {
     //alert("componentDidMount")	  
-    //this.loadCountryList();
-    //this.loadCityList();
+    this.loadCountryList();
+    this.loadCityList();
   }
   componentWillUnmount() {
     //alert("componentWillUnmount")

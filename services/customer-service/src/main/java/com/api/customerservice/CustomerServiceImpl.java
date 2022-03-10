@@ -5,16 +5,21 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.controller.CustomerController;
 import com.api.entity.Customer;
+import com.api.repository.CustomerRepository;
 
 import net.minidev.json.JSONObject;
 
 @Service
 public class CustomerServiceImpl {
 	final static Logger logger = LoggerFactory.getLogger(CustomerController.class);
+	
+	@Autowired
+	CustomerRepository customerRepository;
 
 	public List<Customer> getCustomerDetails() {
 		// TODO Auto-generated method stub
@@ -70,6 +75,9 @@ public class CustomerServiceImpl {
 		json.appendField("address", customer.getAddress());
 		json.appendField("email", customer.getEmail());
 		json.appendField("telephone", customer.getTelephone());
+		
+		customerRepository.save(customer);
+		
 		return json.toJSONString();
 	}
 
