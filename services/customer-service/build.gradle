@@ -2,10 +2,11 @@ plugins {
 	id 'org.springframework.boot' version '2.5.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'com.bmuschko.docker-remote-api' version '6.6.1'
 }
 
 group = 'com.api'
-version = '0.0.1-SNAPSHOT'
+version = 'latest'
 sourceCompatibility = '11'
 
 repositories {
@@ -15,6 +16,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	
 	
 	// https://mvnrepository.com/artifact/net.minidev/json-smart
 	implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
@@ -25,12 +28,29 @@ dependencies {
 	
 	//for the mysql db
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
-	implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.6.2'
-	implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+	
+	
+	
 	
 	
 }
+bootRun {
+   systemProperties = System.properties
+}
+
 
 test {
 	useJUnitPlatform()
+}
+
+import com.bmuschko.gradle.docker.tasks.image.*
+task buildDocker(type: DockerBuildImage, dependsOn: build) {
+	inputDir = file('docker')
+	images.add('test/customer-service')
+	doFirst {
+		copy {
+			from 'build/libs'
+			into 'docker'
+		}
+	}
 }
