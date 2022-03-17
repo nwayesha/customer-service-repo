@@ -2,9 +2,13 @@ package com.api.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,22 +52,31 @@ public class CustomerController {
 	}
 	
 	
-	
+	@ApiOperation(value = "Update Customer")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
-	public String updateCustomerDetails(@RequestBody Customer customer) {
-		return customerServiceImpl.updateCustomerDetails(customer);
+	public ResponseEntity<?> updateCustomerDetails(@RequestBody Customer customer, HttpServletResponse response) {
+		try {
+			customer = customerServiceImpl.updateCustomerDetails(customer);
+			response.setStatus(HttpServletResponse.SC_CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return ResponseEntity.ok(customer);	
 	}
 
 	@ApiOperation(value = "Create New Customer")
 	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json")
-	public String saveCustomerDetails(@RequestBody Customer customer) {
-		return customerServiceImpl.saveCustomerDetails(customer);
+	public ResponseEntity<?> deleteCustomerDetails(@RequestBody Customer customer, HttpServletResponse response) {
+		try {
+			customerServiceImpl.saveCustomerDetails(customer);
+			response.setStatus(HttpServletResponse.SC_ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return ResponseEntity.ok("Success");				
 	}
-
-	@RequestMapping(value = "/delete", method = RequestMethod.DELETE, produces = "application/json")
-	public Customer deleteCustomerDetails(@RequestBody Customer customer) {
-		return customerServiceImpl.deleteCustomerDetails(customer);
-	}
+	
+	
 
 	@GetMapping("/serviceCheck")
 	@ResponseBody
