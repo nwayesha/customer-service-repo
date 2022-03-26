@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.customerservice.CustomerServiceImpl;
+import com.api.customerservice.CustomerService;
 import com.api.entity.Customer;
 
 import io.swagger.annotations.ApiOperation;
@@ -30,45 +30,44 @@ public class CustomerController {
 	final static Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
 	@Autowired
-	private CustomerServiceImpl customerServiceImpl;
+	private CustomerService customerService;
 
+	@ApiOperation(value = "Search all customers")
 	@GetMapping("/customerDetails")
-	public List<Customer> getCustomerDetails() {
-		List<Customer> costomerDetails = customerServiceImpl.getCustomerDetails();
-		return costomerDetails;
-	}
-
-	@GetMapping("/find/id/{customer_id}")
-	public Customer getCustomerDetailsbyId(@PathVariable String customer_id) {
-		logger.info("finding customer details by id" + customer_id);
-		return customerServiceImpl.getCustomerDetailsbyId(customer_id);
-	}
-
-	
-	@GetMapping("/find/id/{customer_id}/{regoin_id}")
-	public Customer getCustomerDetailsbyId(@PathVariable String customer_id, @PathVariable String regoin_id) {
-		logger.info("finding customer details by id" + customer_id);
-		return customerServiceImpl.getCustomerDetailsbyId(customer_id);
-	}
-	
-	
-	@ApiOperation(value = "Update Customer")
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
-	public ResponseEntity<?> updateCustomerDetails(@RequestBody Customer customer, HttpServletResponse response) {
+	public @ResponseBody ResponseEntity<List<Customer>> getCustomerDetails() {
+		List<Customer> customerList = null;
 		try {
-			customer = customerServiceImpl.updateCustomerDetails(customer);
-			response.setStatus(HttpServletResponse.SC_CREATED);
+			customerList = customerService.getCustomerDetails();			
 		} catch (Exception e) {
+			logger.error("exception in getting all customer details -- ",e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
-		return ResponseEntity.ok(customer);	
+		return ResponseEntity.ok().body(customerList);
 	}
 
-	@ApiOperation(value = "Create New Customer")
-	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<?> deleteCustomerDetails(@RequestBody Customer customer, HttpServletResponse response) {
+	@ApiOperation(value = "Search Customer from id")
+	@GetMapping("/find/id/{customer_id}")
+	public @ResponseBody ResponseEntity<Customer> getCustomerDetailsbyId(@PathVariable Integer customerId) {
+		Customer customer = null;
 		try {
-			customerServiceImpl.saveCustomerDetails(customer);
+			logger.info("finding customer details by id" + customerId);
+			customer = customerService.getCustomerDetailsbyId(customerId);	
+			if(customer == null) {
+				return ResponseEntity.badRequest().build();
+			}
+		} catch (Exception e) {
+			logger.error("exception in getting all customer details -- ",e);
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return ResponseEntity.ok().body(customer);		
+		
+	}
+	
+	@ApiOperation(value = "Create New Customer")
+	@RequestMapping(value = "/Save", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<?> saveCustomerDetails(@RequestBody Customer customer, HttpServletResponse response) {
+		try {
+			customerService.saveCustomerDetails(customer);
 			response.setStatus(HttpServletResponse.SC_ACCEPTED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,14 +75,37 @@ public class CustomerController {
 		return ResponseEntity.ok("Success");				
 	}
 	
+	@ApiOperation(value = "Update Customer")
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
+	public ResponseEntity<?> updateCustomerDetails(@RequestBody Customer customer, HttpServletResponse response) {
+		try {
+			customer = customerService.updateCustomerDetails(customer);
+			response.setStatus(HttpServletResponse.SC_CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return ResponseEntity.ok(customer);	
+	}	
 	
+	@ApiOperation(value = "Delete Customer")
+	@RequestMapping(value = "/Delete", method = RequestMethod.DELETE, produces = "application/json")
+	public ResponseEntity<?> deleteCustomerDetails(@RequestBody Customer customer, HttpServletResponse response) {
+		try {
+			customerService.deleteCustomerDetails(customer);;
+			response.setStatus(HttpServletResponse.SC_ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return ResponseEntity.ok("Success");				
+	}	
 
 	@GetMapping("/serviceCheck")
 	@ResponseBody
-	public String serviceCheck() {
+	public String serviceCheck(HttpServletResponse response) {
 		JSONObject json = new JSONObject();
 		json.appendField("status", "success");
-
+		ResponseEntity.ok().build(); 
+		
 		return json.toJSONString();
 	}
 }

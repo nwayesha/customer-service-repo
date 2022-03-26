@@ -22,14 +22,6 @@ public class Customer implements Serializable {
 	private String email;
 	private String telephone;
 
-//	public Customer(int id, String name, String address, String email, String telephone) {
-//		super();
-//		this.id = id;
-//		this.name = name;
-//		this.address = address;
-//		this.email = email;
-//		this.telephone = telephone;
-//	}
 
 	public int getId() {
 		return id;
