@@ -63,6 +63,24 @@ public class CustomerController {
 		
 	}
 	
+	@ApiOperation(value = "Search Customer by email")
+	@GetMapping("/find/email/{email}")
+	public @ResponseBody ResponseEntity<Customer> getCustomerDetailsbyEmail(@PathVariable String email) {
+		Customer customer = null;
+		try {
+			logger.info("finding customer details by id" + email);
+			customer = customerService.getCustomerDetailsbyEmail(email);	
+			if(customer == null) {
+				return ResponseEntity.badRequest().build();
+			}
+		} catch (Exception e) {
+			logger.error("exception in getting all customer details -- ",e);
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return ResponseEntity.ok().body(customer);		
+		
+	}
+	
 	@ApiOperation(value = "Create New Customer")
 	@RequestMapping(value = "/Save", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<?> saveCustomerDetails(@RequestBody Customer customer, HttpServletResponse response) {

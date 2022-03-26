@@ -73,4 +73,11 @@ public class CustomerService {
 		logger.info("deleting the customer" + customer.getId());
 		customerRepository.delete(customer);
 	}
+
+	public Customer getCustomerDetailsbyEmail(String email) {
+		Optional<Customer> customer = customerRepository.findByEmail(email);
+		// return customer.isEmpty() ? null : customer.get();
+		logger.info("getting customer details by email --");
+		return customer.isPresent() ? customer.get() : null;
+	}
 }
