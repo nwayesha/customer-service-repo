@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.customerservice.CustomerService;
+import com.api.service.CustomerService;
 import com.api.entity.Customer;
 
 import io.swagger.annotations.ApiOperation;

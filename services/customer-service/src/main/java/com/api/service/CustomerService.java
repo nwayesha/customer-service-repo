@@ -1,4 +1,4 @@
-package com.api.customerservice;
+package com.api.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +60,7 @@ public class CustomerService {
 	 * @return
 	 */
 	public Customer saveCustomerDetails(Customer customer) {
+		customer.setId("".equals(customer.getId())  ? null : customer.getId());
 		customerRepository.save(customer);
 		logger.info("saving the customer" + customer.getId());
 		return customer;

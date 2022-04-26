@@ -43,9 +43,9 @@ public class SwaggerConfig {
 	
 	private Predicate<String> paths() {
 		return and(or( // Paths to Load
-				regex("/customer.*")));
+				regex("/customer.*"), regex("/country.*")));
 	}
-	
+		
 	private ApiInfo apiInfo() {
 	    return new ApiInfoBuilder()
 				.title("Customer Service").description("simple customer details handling project")

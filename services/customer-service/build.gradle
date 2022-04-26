@@ -15,11 +15,10 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	//implementation 'org.springframework:spring-webmvc:5.3.10'
 	
-	
+
 	// https://mvnrepository.com/artifact/net.minidev/json-smart
 	implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
 	
@@ -30,18 +29,22 @@ dependencies {
 	//for the mysql db
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
 	
+	//test NG
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '1.5.10.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'org.testng', name: 'testng', version: '6.14.3'
 	
+	//Test API
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
 	
 	
 	
 }
 bootRun {
    systemProperties = System.properties
-}
-
-
-test {
-	useJUnitPlatform()
 }
 
 import com.bmuschko.gradle.docker.tasks.image.*
@@ -55,3 +58,22 @@ task buildDocker(type: DockerBuildImage, dependsOn: build) {
 		}
 	}
 }
+
+test {	
+	useTestNG(){
+		//includeGroups 'smoke', 'sanity'
+		//excludeGroups 'regression'
+		
+		// runlist to executed. path is relative to current folder
+		suites 'src/test/resources/testing.xml'
+		
+		useDefaultListeners = true
+		
+		reports.html.setDestination(file("test-output"))		
+		
+	}	
+	testLogging {
+		events "PASSED", "FAILED", "SKIPPED"
+	}
+}
+
